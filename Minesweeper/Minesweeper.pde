@@ -26,6 +26,9 @@ int colCheck2;
 int mineProximity;
 int mineX;
 int mineY;
+int time;
+int timeStamp;
+int flags;
 int clickedRow;
 int clickedCol;
 int gameState;
@@ -39,6 +42,9 @@ void setup() {
   mineData = new int[rowCount][colCount];
   spaceData = new int[rowCount][colCount];
   flagData = new int[rowCount][colCount];
+  flags = 0;
+  time = 0;
+  timeStamp = millis();
   //Mine[] mines = new Mine[10];
   for (int i=0; i<rowCount; i++) {
     for (int j=0; j<colCount; j++) {
@@ -78,10 +84,17 @@ void draw() {
           theBoard.removeFlagAt(i,j);
           theFlag = new Flag(i,j,0);
           theBoard.flagSpace(theFlag);
+          flags = mineCount;
         }
       }
     }
     gameState = 2;
+  }
+  if (gameState == 0 && !FIRST_CLICK) {
+    if (millis() - timeStamp >= 1000 && time < 1000) {
+      time++;
+      timeStamp = millis();
+    }
   }
   fill(0);
   textSize(20);
@@ -90,6 +103,11 @@ void draw() {
   text("M - Medium",width/2,525);
   text("H - Hard",width/2,550);
   text("Space - Restart (Same difficulty)", width/2,575);
+  textSize(30);
+  textAlign(LEFT);
+  text("Mines: " + (mineCount - flags), 50, 520);
+  textAlign(RIGHT);
+  text("Time: "+time, width - 50, 520);
   if (gameState == 1) {
     textSize(30);
     textAlign(CENTER);
@@ -154,6 +172,10 @@ void clickSpace(int rowAt, int colAt) {
   colAt = int(colAt);
   if ((rowAt >= 0 && rowAt < rowCount) && (colAt >= 0 && colAt < colCount)) {
     if (spaceData[rowAt][colAt] == 0 && flagData[rowAt][colAt] != 1) {
+      if (FIRST_CLICK) {
+        FIRST_CLICK = false;
+        timeStamp = millis();
+      }
       spaceData[rowAt][colAt] = 1;
       flagData[rowAt][colAt] = 0;
       theBoard.removeFlagAt(rowAt,colAt);
@@ -207,15 +229,21 @@ void flagSpace(int rowAt, int colAt) {
   colAt = int(colAt);
   if ((rowAt >= 0 && rowAt < rowCount) && (colAt >= 0 && colAt < colCount)) {
     if (spaceData[rowAt][colAt] == 0) {
+      if (FIRST_CLICK) {
+        FIRST_CLICK = false;
+        timeStamp = millis();
+      }
       if (flagData[rowAt][colAt] == 0) {
         theFlag = new Flag(rowAt,colAt,0);
         flagData[rowAt][colAt] = 1;
         theBoard.flagSpace(theFlag);
+        flags++;
       } else if (flagData[rowAt][colAt] == 1) {
         theFlag = new Flag(rowAt,colAt,1);
         theBoard.removeFlagAt(rowAt,colAt);
         theBoard.flagSpace(theFlag);
         flagData[rowAt][colAt] = 2;
+        flags--;
       } else {
         theBoard.removeFlagAt(rowAt,colAt);
         flagData[rowAt][colAt] = 0;

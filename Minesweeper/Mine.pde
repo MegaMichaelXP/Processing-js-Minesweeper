@@ -14,7 +14,7 @@ public class Mine extends BoardItem {
     fill(0);
     noStroke();
     ellipseMode(CORNER);
-    ellipse(2,2,cellSize-3,cellSize-3);
+    ellipse(4,4,cellSize-7,cellSize-7);
     popMatrix();
   }
   

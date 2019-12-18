@@ -21,7 +21,7 @@ public class ClickedSpace extends BoardItem {
       noStroke();
       fill(0);
       ellipseMode(CORNER);
-      ellipse(2,2,cellSize-3,cellSize-3);
+      ellipse(4,4,cellSize-7,cellSize-7);
     } else {
       rect(0,0,cellSize,cellSize);
       switch (mines) {

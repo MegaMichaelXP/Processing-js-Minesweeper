@@ -38,7 +38,7 @@ public class Flag extends BoardItem {
       noStroke();
       fill(0);
       ellipseMode(CORNER);
-      ellipse(2,2,cellSize-3,cellSize-3);
+      ellipse(4,4,cellSize-7,cellSize-7);
       stroke(255,0,0);
       strokeWeight(3);
       line(4,4,cellSize-4,cellSize-4);
